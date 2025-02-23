@@ -5,9 +5,6 @@ import 'route.dart';
 import 'middleware.dart';
 
 class Duck {
-  final String _host;
-  final int _port;
-  Duck(this._host, this._port);
 
   final List<Route> routes = [];
   final List<Middleware> middlewares = [];
@@ -65,9 +62,9 @@ class Duck {
     });
   }
 
-  Future<void> start() async {
-    final server = await HttpServer.bind(InternetAddress.anyIPv4, _port);
-    log.startServer('Server start in $_host:$_port');
+  Future<void> start({String host = 'localhost', int port = 8080}) async {
+    final server = await HttpServer.bind(InternetAddress.anyIPv4, port);
+    log.startServer('Server start in $host:$port');
     await for (var request in server) {
       _handleRequest(request);
     }

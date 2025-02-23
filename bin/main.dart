@@ -4,7 +4,7 @@ import 'json.dart';
 import 'middleware.dart';
 
 void main() async {
-  final app = Duck('localhost', 8080);
+  final app = Duck();
 
   app.get('/', (HttpRequest request) async => jsonResponse({
     "data": "any text",
