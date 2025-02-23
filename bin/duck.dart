@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:duck/logger.dart';
 import 'route.dart';
 import 'middleware.dart';
+import 'json.dart';
 
 class Duck {
 
@@ -37,11 +38,9 @@ class Duck {
         return await route.handler(request);
       }
     }
-    return '''
-      HTTP/1.1 404 Not Found
-      Content-Type: text/html
-      <h1>404 Not Found</h1>
-      ''';
+    return jsonResponse({
+      "ERROR": "404 NOT FOUND",
+    });
   }
   
   Future<void> _executeMiddlewares(HttpRequest request, int index, Function finalHandler) async {

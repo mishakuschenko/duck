@@ -13,9 +13,10 @@ class LoggingMiddleware implements Middleware {
   Future<void> handle(HttpRequest request, Function next) async {
     if (request.response.statusCode == 200) {
       log.succesRes('test succes message');
+      print(request.response.statusCode);
       await next();
     } else if (httpErrorStatusCodes.contains(request.response.statusCode)) {
-      log.errorRes(request.method, 'test succes message');
+      log.errorRes(request.method, 'test ssdsdsage');
       await next();
     }
   }
