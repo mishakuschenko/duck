@@ -8,18 +8,31 @@
 
 ```
 import 'dart:io';
-import 'duck.dart';
+import 'package:duck/duck.dart';
 
 void main() async {
   final app = Duck('localhost', 8080);
 
-  app.get('/', (HttpRequest request) async {
-    return jsonResponse({"message": "Hello, World!"});
+  app.get('/', (request) async {
+    return 'Hello, World!';
   });
 
-  app.start();
+  app.start(); // По умолчанию - http://localhost:8080/
 }
 ```
 
 Теперь сервер будет доступен по адресу http://localhost:8080/.
 
+Способ работы с JSON:
+```
+app.get('/json', (request) async {
+    return {
+      'status': 'ok',
+      'code': 200,
+      'info': {
+        'isHappy': true,
+        'balance': 123.23,
+      },
+    };
+  }); // Передавайте обычную карту, автоматическая декодировка в JSON
+```  
