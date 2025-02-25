@@ -1,4 +1,3 @@
-
 class Logger {
   final _redColor = '\x1B[31m';
   final _greenColor = '\x1B[32m';
