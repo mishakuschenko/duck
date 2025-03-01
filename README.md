@@ -1,6 +1,5 @@
 <h2>Duck</h2>
 <h1>Simple dart web-framework for creating HTTP-servers</h1>
-<hr>
 
 ```dart
 // Quick start:
@@ -8,7 +7,7 @@ import 'package:duck/duck.dart' as dk;
 
 void main() async {
   // Class instance:
-  final app = Duck();
+  final app = dk.Duck();
 
   // Get request:
   app.get('/', (request) async {
