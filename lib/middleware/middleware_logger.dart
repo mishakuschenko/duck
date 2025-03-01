@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'middleware.dart';
-import 'package:duck/status_codes.dart';
-import 'package:duck/logger.dart';
+import 'package:duck/utils/status_codes.dart';
+import 'package:duck/utils/logger.dart';
 
 class MiddlewareLogger implements Middleware {
 
