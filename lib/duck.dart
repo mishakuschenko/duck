@@ -1,5 +1,3 @@
-/// A library that exports all the core components required for building a simple HTTP server.
-///
 /// This file serves as a central point for re-exporting the following modules:
 /// - [Router]: Handles routing of HTTP requests to their respective handlers.
 /// - [Server]: Manages the HTTP server lifecycle and request handling.
