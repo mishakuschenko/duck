@@ -4,10 +4,14 @@ import 'router.dart';
 import 'response_handler.dart';
 import 'logger.dart';
 
+// import './middleware/middleware_pipeline.dart';
+// import './middleware/middleware_logger.dart';
+
 class Duck {
   final Router _router = Router();
   final Logger _log = Logger();
   final ResponseHandler _responseHandler = ResponseHandler();
+  //final MiddlewarePipeline _middlewarePipeline = MiddlewarePipeline();
 
   void get(String path, Function(HttpRequest) handler) {
     _router.get(path, handler);
@@ -39,12 +43,13 @@ class Duck {
         final response = await handler(request);
         _responseHandler.handleResponse(request, response);
         _log.succesRes(method);
+        // await _middlewarePipeline.execute(request, handler);
       } else {
         request.response
           ..statusCode = 404
           ..write('404 Not Found')
           ..close();
-        _log.errorRes(method, '404 Not Found');
+        _log.errorRes(method);
       }
     }
   }

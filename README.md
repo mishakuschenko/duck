@@ -7,14 +7,13 @@
 Создайте простой сервер с помощью Duck:
 
 ```
-import 'dart:io';
 import 'package:duck/duck.dart';
 
 void main() async {
   final app = Duck('localhost', 8080);
 
   app.get('/', (request) async {
-    return 'Hello, World!';
+    return {'status': 'ok'};
   });
 
   app.start(); // По умолчанию - http://localhost:8080/
@@ -22,17 +21,3 @@ void main() async {
 ```
 
 Теперь сервер будет доступен по адресу http://localhost:8080/.
-
-Способ работы с JSON:
-```
-app.get('/json', (request) async {
-    return {
-      'status': 'ok',
-      'code': 200,
-      'info': {
-        'isHappy': true,
-        'balance': 123.23,
-      },
-    };
-  }); // Передавайте обычную карту, автоматическая декодировка в JSON
-```  

@@ -22,8 +22,8 @@ class Logger {
     print('$_greenColor$_succes $method $time $_resetColor');
   }
 
-  void errorRes(String method, String text) {
+  void errorRes(String method) {
     DateTime time = DateTime.now().toLocal();
-    print('$_redColor$_error $method $time: $text $_resetColor');
+    print('$_redColor$_error $method $time$_resetColor');
   }
 }
