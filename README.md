@@ -1,29 +1,26 @@
-<h1><h1>В РАЗРАБОТКЕ, В PUB.DEV НЕ ОПУБЛИКОВАН</h1></h1>
+<h2>Duck</h2>
+<h1>Simple dart web-framework for creating HTTP-servers</h1>
+<hr>
 
-<h1>Duck — это простой веб-фреймворк на языке Dart для создания HTTP-серверов. Он поддерживает методы GET, POST, PUT, DELETE и позволяет легко работать с JSON.</h1>
-
-Быстрый старт
-
-Создайте простой сервер с помощью Duck:
-
-```
-import 'package:duck/duck.dart';
+```dart
+// Quick start:
+import 'package:duck/duck.dart' as dk;
 
 void main() async {
+  // Class instance:
   final app = Duck();
 
-  app.get('/test', (request) async {
-    return {'status': 'ok'};
+  // Get request:
+  app.get('/', (request) async {
+    return {
+      'status': 'ok'
+    }; // Map<> is automatically converted to json
   });
-  app.post('/test', (request) async => 'hello world');
-  app.put('/test', (request) async => 'hello world');
-  app.delete('/test', (request) async => 'hello world');
 
-  // Пример XML-ответа
-  app.get('/xml', (request) async => '<xml><message>hello world</message></xml>');
+  // Post request:
+  app.post('/', (request) async {
+    return 'You sent: ${await dk.getBody(request)}\n'; 
+  }); 
 
-  await app.start(); // По умолчанию - http://localhost:1209/
-}
+  await app.start(host: 'localhost', port: 1209); // Default - http://localhost:1209/
 ```
-
-Теперь сервер будет доступен по адресу http://localhost:1209/.

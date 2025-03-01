@@ -1,17 +1,17 @@
-import 'package:duck/duck.dart';
+import 'package:duck/duck.dart' as dk;
 
 void main() async {
-  final app = Duck();
+  final app = dk.Duck();
 
-  app.get('/test', (request) async {
+  app.get('/', (request) async {
     return {'status': 'ok'};
   });
-  app.post('/test', (request) async => 'hello world');
-  app.put('/test', (request) async => 'hello world');
-  app.delete('/test', (request) async => 'hello world');
+  app.post('/', (request) async {
+    return 'You sent: ${await dk.getBody(request)}\n';
+  }); 
 
   // Пример XML-ответа
   app.get('/xml', (request) async => '<xml><message>hello world</message></xml>');
 
-  await app.start();
+  await app.start(host: 'localhost', port: 1209);
 }
