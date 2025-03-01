@@ -10,14 +10,20 @@
 import 'package:duck/duck.dart';
 
 void main() async {
-  final app = Duck('localhost', 8080);
+  final app = Duck();
 
-  app.get('/', (request) async {
+  app.get('/test', (request) async {
     return {'status': 'ok'};
   });
+  app.post('/test', (request) async => 'hello world');
+  app.put('/test', (request) async => 'hello world');
+  app.delete('/test', (request) async => 'hello world');
 
-  app.start(); // По умолчанию - http://localhost:8080/
+  // Пример XML-ответа
+  app.get('/xml', (request) async => '<xml><message>hello world</message></xml>');
+
+  await app.start(); // По умолчанию - http://localhost:1209/
 }
 ```
 
-Теперь сервер будет доступен по адресу http://localhost:8080/.
+Теперь сервер будет доступен по адресу http://localhost:1209/.
