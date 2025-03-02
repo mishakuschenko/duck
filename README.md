@@ -22,4 +22,5 @@ void main() async {
   }); 
 
   await app.start(host: 'localhost', port: 1209); // Default - http://localhost:1209/
+}
 ```
