@@ -1,85 +1,59 @@
 import 'dart:io';
-import 'dart:async';
+import 'package:duck/utils/logger.dart';
+
 import 'router.dart';
-import 'response_handler.dart';
-import 'utils/logger.dart';
+import 'request.dart';
+import 'response.dart';
 
-/// A simple HTTP server class that allows registering handlers for different HTTP methods
-/// (GET, POST, PUT, DELETE) and starting the server on a specified host and port.
-///
-/// The server uses a router to handle incoming requests, a logger to track server events,
-/// and a response handler to manage server responses.
 class Duck {
-  final Router _router = Router();
   final Logger _log = Logger();
-  final ResponseHandler _responseHandler = ResponseHandler();
-  //final MiddlewarePipeline _middlewarePipeline = MiddlewarePipeline();
+  final Router _router = Router();
 
-  /// Registers a handler for a GET request at the given path.
-  ///
-  /// [path] - the path where the handler will be registered.
-  /// [handler] - a function that will be called when a GET request is received.
-  /// It accepts a [HttpRequest] object and can use it to process the request.
-  void get(String path, Function(HttpRequest) handler) {
-    _router.get(path, handler);
+  void get(String path, Function handler) {
+    _router.addRoute('GET', path, handler);
   }
 
-  /// Registers a handler for a POST request at the given path.
-  ///
-  /// [path] - the path where the handler will be registered.
-  /// [handler] - a function that will be called when a POST request is received.
-  /// It accepts a [HttpRequest] object and can use it to process the request.
-  void post(String path, Function(HttpRequest) handler) {
-    _router.post(path, handler);
+  void post(String path, Function handler) {
+    _router.addRoute('POST', path, handler);
   }
 
-  /// Registers a handler for a PUT request at the given path.
-  ///
-  /// [path] - the path where the handler will be registered.
-  /// [handler] - a function that will be called when a PUT request is received.
-  /// It accepts a [HttpRequest] object and can use it to process the request.
-  void put(String path, Function(HttpRequest) handler) {
-    _router.put(path, handler);
+  void put(String path, Function handler) {
+    _router.addRoute('PUT', path, handler);
   }
 
-  /// Registers a handler for a DELETE request at the given path.
-  ///
-  /// [path] - the path where the handler will be registered.
-  /// [handler] - a function that will be called when a DELETE request is received.
-  /// It accepts a [HttpRequest] object and can use it to process the request.
-  void delete(String path, Function(HttpRequest) handler) {
-    _router.delete(path, handler);
+  void delete(String path, Function handler) {
+    _router.addRoute('DELETE', path, handler);
   }
 
-  /// Starting a HTTP-server on specified host and port. Default -> http://localhost:1209/
-  /// 
-  /// [host] - hostname for server. Default - localhost
-  /// [port] - port for server. Default - 1209
-  /// 
-  /// This function creates a server that processes incoming HTTP requests,
-  /// registers them using the router and returns the corresponding responses.
-  Future<void> start({String host = 'localhost', int port = 1209}) async {
+  Future<void> start({int port = 1209, String host = 'localhost'}) async {
     final server = await HttpServer.bind(host, port);
-    _log.startServer(info: 'Server start at:', host: host, port: port);
+    _log.startServer(info: 'Server running in: ', host: host, port: port);
 
-    await for (var request in server) {
-      final path = request.uri.path;
-      final method = request.method;
-
-      final handler = _router.getHandler(method, path);
-
-      if (handler != null) {
-        final response = await handler(request);
-        _responseHandler.handleResponse(request, response);
-        _log.succesRes(method);
-        // await _middlewarePipeline.execute(request, handler);
-      } else {
-        request.response
-          ..statusCode = 404
-          ..write('404 Not Found')
-          ..close();
-        _log.errorRes(method);
-      }
+    await for (HttpRequest request in server) {
+      _handleRequest(request);
     }
   }
+
+  void _handleRequest(HttpRequest request) async {
+  final method = request.method;
+  final path = request.uri.path;
+
+  final handler = _router.findHandler(method, path);
+  final params = _router.getParams(); // Получаем параметры
+
+  if (handler == null) {
+    Response(request.response).send(HttpStatus.notFound, 'Not Found');
+    return;
+  }
+
+  final req = Request(request)
+    ..params = params;
+  final res = Response(request.response);
+
+  try {
+    await handler(req, res);
+  } catch (e) {
+    res.send(HttpStatus.internalServerError, 'Server Error');
+  }
+}
 }
